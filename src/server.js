@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import  {connectDB} from "./config/db.js"
+import  connectDB from "./config/db.js"
 
 dotenv.config();
 const app = express();
