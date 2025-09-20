@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
 
+// Option for a question
 const optionSchema = new mongoose.Schema({
-  text: String,
-  mediaUrl: String // image/video 
+  text: { type: String }, // optional text
+  mediaUrl: { type: String } // optional image/video
 });
 
+// Question inside quiz
 const questionSchema = new mongoose.Schema({
-  questionText: String,
-  mediaUrl: String, // optional image/video
-  options: [optionSchema],
-  correctOption: { type: Number, required: true } // index of correct answer
+  questionText: { type: String },
+  mediaUrl: { type: String }, // optional image/video for question
+  options: [optionSchema], // multiple options
+  correctOptions: [{ type: Number, required: true }], // indices of correct answers
+  points: { type: Number, default: 1 } // points per question
 });
 
+// Quiz schema
 const quizSchema = new mongoose.Schema({
   title: { type: String, required: true },
   classId: { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true },
