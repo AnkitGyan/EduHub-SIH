@@ -1,9 +1,11 @@
 import express from "express";
-import { registerTeacher, loginTeacher } from "../controllers/teacherController.js";
+import { teacherSignup, teacherLogin, addClassesToTeacher } from "../controllers/teacherController.js";
+import { protectTeacher } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/register", registerTeacher);
-router.post("/login", loginTeacher);
+router.post("/signup", teacherSignup);
+router.post("/login", teacherLogin);
+router.post("/add-classes", protectTeacher, addClassesToTeacher);
 
 export default router;

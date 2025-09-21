@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
 import Teacher from "../models/teacher.js";
 
-export const protectUser = async (req, res, next) => {
+export const protectTeacher = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
@@ -10,12 +9,14 @@ export const protectUser = async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id);
+      req.teacher = await Teacher.findById(decoded.id); 
       next();
     } catch (error) {
       return res.status(401).json({ message: "Not authorized" });
     }
   }
 
-  if (!token) return res.status(401).json({ message: "No token provided" });
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
 };

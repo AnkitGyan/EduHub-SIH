@@ -1,9 +1,15 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/userController.js";
+import { studentSignup, studentLogin, getStudentProfile, getClassProblems } from "../controllers/usersController.js";
+import { protectUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+// Public routes
+router.post("/signup", studentSignup);
+router.post("/login", studentLogin);
+
+// Protected routes
+router.get("/me", protectUser);   
+router.get("/problems", protectUser, getClassProblems);
 
 export default router;

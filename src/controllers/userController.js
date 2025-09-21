@@ -1,44 +1,44 @@
-import User from "../models/userModel.js";
-import generateToken from "../utils/generateToken.js";
+import User from "../models/user.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-export const registerUser = async (req, res) => {
-  try {
-    const { firstName, lastName, email, password, class: studentClass } = req.body;
 
-    const userExists = await User.findOne({ email });
-    if (userExists) return res.status(400).json({ message: "User already exists" });
+export const studentSignup = async (req, res) => {
+  const { firstName, lastName, email, password, classId } = req.body;
 
-    const user = await User.create({ firstName, lastName, email, password, class: studentClass });
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return res.status(400).json({ message: "Email already registered" });
 
-    res.status(201).json({
-      _id: user._id,
-      name: `${user.firstName} ${user.lastName}`,
-      email: user.email,
-      class: user.class,
-      token: generateToken(user._id, "student"),
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const student = await User.create({
+    firstName,
+    lastName,
+    email,
+    password: hashedPassword,
+    class: classId
+  });
+
+  res.status(201).json({ message: "Student created successfully", student });
 };
 
-export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
-      res.json({
-        _id: user._id,
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-        class: user.class,
-        token: generateToken(user._id, "student"),
-      });
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+export const studentLogin = async (req, res) => {
+  const { email, password } = req.body;
+  const student = await User.findOne({ email });
+  if (!student) return res.status(404).json({ message: "Student not found" });
+
+  const isMatch = await bcrypt.compare(password, student.password);
+  if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+  const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  res.json({ token, student });
 };
+
+
+export const getStudentProfile = async (req, res) => {
+  const student = req.user; // from auth middleware
+  res.json({ student });
+};
+
+

@@ -1,22 +1,12 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+const { Schema, Types } = mongoose;
 
-const teacherSchema = new mongoose.Schema({
+const teacherSchema = new Schema({
   firstName: { type: String, required: true },
   lastName:  { type: String, required: true },
   email:     { type: String, unique: true, required: true },
   password:  { type: String, required: true },
-  assignedClasses: [{ type: Types.ObjectId, ref: "Class" }]
+  assignedClasses: [{ type: Types.ObjectId, ref: "Class" }],
 }, { timestamps: true });
-
-teacherSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
-
-teacherSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
 
 export default mongoose.model("Teacher", teacherSchema);
