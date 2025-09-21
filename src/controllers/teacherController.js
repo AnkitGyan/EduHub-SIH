@@ -1,49 +1,42 @@
-import Quiz from "../models/Quiz.js";
-import User from "../models/User.js";
+import Teacher from "../models/teacherModel.js";
+import generateToken from "../utils/generateToken.js";
 
-// Assign quiz to a class
-export const assignQuiz = async (req, res) => {
+export const registerTeacher = async (req, res) => {
   try {
-    const { title, classId, questions } = req.body;
-    const teacherId = req.user.id; // from auth middleware
+    const { firstName, lastName, email, password } = req.body;
 
-    const quiz = await Quiz.create({
-      title,
-      classId,
-      teacherId,
-      questions
+    const teacherExists = await Teacher.findOne({ email });
+    if (teacherExists) return res.status(400).json({ message: "Teacher already exists" });
+
+    const teacher = await Teacher.create({ firstName, lastName, email, password });
+
+    res.status(201).json({
+      _id: teacher._id,
+      name: `${teacher.firstName} ${teacher.lastName}`,
+      email: teacher.email,
+      token: generateToken(teacher._id, "teacher"),
     });
-
-    res.status(201).json({ message: "Quiz assigned successfully", quiz });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-// View overall class performance
-export const getClassPerformance = async (req, res) => {
+export const loginTeacher = async (req, res) => {
   try {
-    const { classId } = req.params;
+    const { email, password } = req.body;
+    const teacher = await Teacher.findOne({ email });
 
-    const students = await User.find({ classes: classId, role: "student" })
-      .select("username stats");
-
-    res.status(200).json({ classId, students });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// View individual student performance
-export const getStudentPerformance = async (req, res) => {
-  try {
-    const { studentId } = req.params;
-    const student = await User.findById(studentId).select("username stats badges");
-
-    if (!student) return res.status(404).json({ message: "Student not found" });
-
-    res.status(200).json(student);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (teacher && (await teacher.matchPassword(password))) {
+      res.json({
+        _id: teacher._id,
+        name: `${teacher.firstName} ${teacher.lastName}`,
+        email: teacher.email,
+        token: generateToken(teacher._id, "teacher"),
+      });
+    } else {
+      res.status(401).json({ message: "Invalid email or password" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
