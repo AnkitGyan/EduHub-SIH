@@ -10,7 +10,7 @@ import usersRoutes from "./routes/usersRoutes.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
 
 // routes
 app.use("/api/students", usersRoutes);

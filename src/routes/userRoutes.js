@@ -1,5 +1,5 @@
 import express from "express";
-import { studentSignup, studentLogin, getStudentProfile, getClassProblems } from "../controllers/usersController.js";
+import { studentSignup, studentLogin} from "../controllers/usersController.js";
 import { protectUser } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -9,7 +9,7 @@ router.post("/signup", studentSignup);
 router.post("/login", studentLogin);
 
 // Protected routes
-router.get("/me", protectUser);   
-router.get("/problems", protectUser, getClassProblems);
+// router.get("/me", protectUser);   
+// router.get("/problems", protectUser, getClassProblems);
 
 export default router;
