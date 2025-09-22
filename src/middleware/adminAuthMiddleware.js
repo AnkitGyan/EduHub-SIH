@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import Teacher from "../models/adminModel";
+import Admin from "../models/adminModel.js";
 
 export const protectAdmin = async (req, res, next) => {
   let token;
@@ -9,7 +9,7 @@ export const protectAdmin = async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.teacher = await Teacher.findById(decoded.id); 
+      req.teacher = await Admin.findById(decoded.id); 
       next();
     } catch (error) {
       return res.status(401).json({ message: "Not authorized" });

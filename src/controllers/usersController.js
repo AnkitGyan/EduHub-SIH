@@ -1,44 +1,66 @@
 import User from "../models/user.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import generateToken from "../utils/generateToken.js";
 
 
 export const studentSignup = async (req, res) => {
-  const { firstName, lastName, email, password, classId } = req.body;
+  try {
+    const { firstName, lastName, email, password, grade } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) return res.status(400).json({ message: "Email already registered" });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "Student already exists" });
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    // hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const student = await User.create({
-    firstName,
-    lastName,
-    email,
-    password: hashedPassword,
-    class: classId
-  });
+    // create student
+    const student = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      grade,
+    });
 
-  res.status(201).json({ message: "Student created successfully", student });
+    res.status(201).json({
+      message: "Student registered successfully",
+      token: generateToken(student._id, "student"),
+      student: {
+        id: student._id,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        email: student.email,
+        grade: student.grade,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error registering student", error: error.message });
+  }
 };
-
 
 export const studentLogin = async (req, res) => {
-  const { email, password } = req.body;
-  const student = await User.findOne({ email });
-  if (!student) return res.status(404).json({ message: "Student not found" });
+  try {
+    const { email, password } = req.body;
 
-  const isMatch = await bcrypt.compare(password, student.password);
-  if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    const student = await User.findOne({ email });
+    if (!student) return res.status(404).json({ message: "Student not found" });
 
-  const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-  res.json({ token, student });
+    const isMatch = await bcrypt.compare(password, student.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+    res.status(200).json({
+      message: "Login successful",
+      token: generateToken(student._id, "student"),
+      student: {
+        id: student._id,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        email: student.email,
+        grade: student.grade,
+        classes: student.classes
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in student", error: error.message });
+  }
 };
-
-
-export const getStudentProfile = async (req, res) => {
-  const student = req.user; // from auth middleware
-  res.json({ student });
-};
-
-
