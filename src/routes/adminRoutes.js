@@ -1,9 +1,9 @@
 import express from "express";
 import { registerAdmin, loginAdmin } from "../controllers/adminController.js";
-
+import { protectAdmin } from "../middleware/adminAuthMiddleware.js";
 const router = express.Router();
 
-router.post("/register", registerAdmin);
+router.post("/signup", registerAdmin);
 router.post("/login", loginAdmin);
 
 export default router;

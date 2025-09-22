@@ -1,4 +1,4 @@
-import Teacher from "../models/teacherModel.js";
+import Teacher from "../models/teacher.js";
 import generateToken from "../utils/generateToken.js";
 
 export const registerTeacher =  async (req, res) => {
@@ -39,7 +39,7 @@ export const loginTeacher = async (req, res) => {
 };
 
 
-const addClassesToTeacher = async (req, res) => {
+export const addClassesToTeacher = async (req, res) => {
   const { newClasses } = req.body;
   const teacher = req.teacher;    
 
