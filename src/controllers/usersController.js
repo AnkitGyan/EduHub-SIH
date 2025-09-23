@@ -19,7 +19,7 @@ export const studentSignup = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
-      grade,
+      classGrade: grade,
     });
 
     res.status(201).json({
