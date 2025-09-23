@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/signup", registerTeacher);
 router.post("/login", loginTeacher);
 router.post("/:class/add-student", protectTeacher, addStudentToClass);
-router.post("/create-class",protectTeacher, createClass);
+router.post("/create-class", protectTeacher, createClass);
 
 export default router;

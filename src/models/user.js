@@ -1,13 +1,30 @@
 import mongoose from "mongoose";
-const { Schema, Types } = mongoose;
 
-const userSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String },
+const userSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
   email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  grade: { type: Number, required: true }, // 6–12
-  classes: [{ type: Types.ObjectId, ref: "Class" }]
+  password: String,
+  classGrade: { type: Number, required: true },
+
+  // performance tracking (optional for now)
+  solvedProblems: {
+    easy: { type: Number, default: 0 },
+    medium: { type: Number, default: 0 },
+    hard: { type: Number, default: 0 },
+    daily: { type: Number, default: 0 },
+  },
+  totalPoints: { type: Number, default: 0 },
+
+  badges: [{
+    name: String,
+    reward: String,
+    earnedAt: { type: Date, default: Date.now }
+  }],
+
+  // social layer
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

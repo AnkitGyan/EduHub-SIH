@@ -64,3 +64,57 @@ export const studentLogin = async (req, res) => {
     res.status(500).json({ message: "Error logging in student", error: error.message });
   }
 };
+
+export const followStudent = async (req, res) => {
+  const studentId = req.user;
+  const { targetId } = req.body; 
+
+  if (studentId === targetId) return res.status(400).json({ message: "Cannot follow yourself" });
+
+  const student = await User.findById(studentId);
+  const target = await User.findById(targetId);
+
+  if (!student || !target) return res.status(404).json({ message: "Student not found" });
+
+  if (!student.following.includes(targetId)) student.following.push(targetId);
+  if (!target.followers.includes(studentId)) target.followers.push(studentId);
+
+  await student.save();
+  await target.save();
+
+  return res.json({ message: `You are now following ${target.firstName}` });
+};
+
+export const unfollowStudent = async (req, res) => {
+  const { studentId } = req.user;
+  const { targetId } = req.body;
+
+  const student = await User.findById(studentId);
+  const target = await User.findById(targetId);
+
+  if (!student || !target) return res.status(404).json({ message: "Student not found" });
+
+  student.following = student.following.filter(id => id.toString() !== targetId);
+  target.followers = target.followers.filter(id => id.toString() !== studentId);
+
+  await student.save();
+  await target.save();
+
+  return res.json({ message: `You unfollowed ${target.firstName}` });
+};
+
+// Get followers & following
+export const getFollowersFollowing = async (req, res) => {
+  const { studentId } = req.params;
+
+  const student = await User.findById(studentId)
+    .populate("followers", "firstName lastName classGrade")
+    .populate("following", "firstName lastName classGrade");
+
+  if (!student) return res.status(404).json({ message: "Student not found" });
+
+  return res.json({
+    followers: student.followers,
+    following: student.following
+  });
+};
