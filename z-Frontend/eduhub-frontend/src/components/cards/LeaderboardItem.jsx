@@ -1,4 +1,4 @@
-export const LeaderboardItem = ({
+ const LeaderboardItem = ({
   avatar,
   name,
   score,
@@ -21,3 +21,5 @@ export const LeaderboardItem = ({
     </div>
   );
 };
+
+export default LeaderboardItem;

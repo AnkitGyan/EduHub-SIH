@@ -2,10 +2,9 @@ import heroBg from "../../assets/bannerImg.png";
 import SignupCard from "./Signupcard";
 
 
-const HeroCard = () => {
+ const HeroCard = () => {
   return (
     <div className="relative w-full h-[400px]">
-      {/* Background Image */}
       <div
         className="w-full h-full bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}

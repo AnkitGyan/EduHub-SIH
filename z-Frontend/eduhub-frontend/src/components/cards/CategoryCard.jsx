@@ -18,3 +18,5 @@ export const CategoryCard = ({
     </div>
   );
 };
+
+export default CategoryCard;

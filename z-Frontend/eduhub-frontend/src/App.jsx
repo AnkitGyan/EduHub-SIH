@@ -1,13 +1,9 @@
-import HeroCard from "./components/cards/HeroCard";
-import { CategoryCard } from "./components/cards/CategoryCard";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   return (
     <div>
-   <HeroCard></HeroCard>
-   <CategoryCard  title ="Science Wiz"
-  bgColor = "bg-blue-200"
-  onClick={()=>alert('science wiz')}></CategoryCard>
+      <HomePage></HomePage>
     </div>
    
   );
