@@ -5,7 +5,7 @@ import User from "../models/user.js";
 import Community from "../models/community.js";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey:ai });
 
 // Admin: create a global quiz
 export const createGlobalQuiz = async (req, res) => {

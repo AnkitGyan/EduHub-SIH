@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, CheckCircle, XCircle, Calculator, Atom, Trophy, Users, Clock, Star, BookOpen } from 'lucide-react';
+import Navbar from "../components/navbar/Navbar"
 
 const ProblemSectionPage = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
@@ -361,6 +362,7 @@ const ProblemSectionPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Navbar></Navbar>
       {/* Header */}
       <div className="bg-white shadow-lg border-b-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-4 py-6">
