@@ -6,7 +6,9 @@ const communitySchema = new Schema({
   description: { type: String },
   owner: { type: Types.ObjectId, ref: "User", required: true },
   members: [{ type: Types.ObjectId, ref: "User" }],      
-  pendingInvites: [{ type: Types.ObjectId, ref: "User" }], 
+  pendingInvites: [{ type: Types.ObjectId, ref: "User" }],
+  points: { type: Number, default: 0 },
+ 
 }, { timestamps: true });
 
 export default mongoose.model("Community", communitySchema);

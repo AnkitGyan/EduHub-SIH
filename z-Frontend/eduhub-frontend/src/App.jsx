@@ -1,10 +1,17 @@
+import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import ProblemSectionPage from "./pages/ProblemSectionPage";
+import StudentDashboard from "./pages/DashBoard";
+
 
 const App = () => {
   return (
-    <div>
-      <HomePage></HomePage>
-    </div>
+   <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/problems" element={<ProblemSectionPage />} />
+      <Route path="/dashboard" element={<StudentDashBaord/>}/>
+
+    </Routes>
    
   );
 };

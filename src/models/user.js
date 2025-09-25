@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   email: { type: String, unique: true, required: true },
   password: String,
-  classGrade: { type: Number, required: true },
+  classGrade: { type: Number, required: true, default: 10},
 
   // performance tracking (optional for now)
   solvedProblems: {

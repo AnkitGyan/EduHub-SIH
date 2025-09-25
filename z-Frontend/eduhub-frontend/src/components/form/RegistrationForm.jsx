@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { X, Mail, Lock, User, GraduationCap } from "lucide-react";
 import { loginUser, registerUser } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = ({ isOpen, initialForm = "login", onClose }) => {
+  const navigate = useNavigate();
   const [currentForm, setCurrentForm] = useState(initialForm);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [registerData, setRegisterData] = useState({
@@ -26,6 +28,7 @@ const RegistrationForm = ({ isOpen, initialForm = "login", onClose }) => {
       const data = await loginUser(loginData);
       console.log("Login successful:", data);
       onClose();
+      navigate("/problems")
     } catch (err) {
       console.log(err);
       setError(err.message || "Login failed");
