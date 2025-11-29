@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Trophy, CheckCircle, Flame, Star, User } from "lucide-react";
 
+
 export default function Dashboard() {
   const [user, setUser] = useState({
     name: "Hero Student",

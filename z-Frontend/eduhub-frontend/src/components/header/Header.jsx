@@ -5,7 +5,9 @@ import {
   ListChecks, Trophy, User,
   Settings, LogOut, Sparkles,
   TrendingUp, Target, Zap
-} from "lucide-react";    
+} from "lucide-react";  
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo.png";
 
 export const Header = ({ currentPage, setCurrentPage }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,10 +32,10 @@ export const Header = ({ currentPage, setCurrentPage }) => {
               className="flex items-center gap-3 cursor-pointer"
             >
               <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+                 <img src={logo} alt="logo.png"></img>
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                LearnQuest
+                VidyaVerse
               </span>
             </div>
 

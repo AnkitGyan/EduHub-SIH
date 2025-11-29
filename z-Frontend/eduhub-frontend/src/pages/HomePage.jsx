@@ -86,7 +86,8 @@ export default function HomePage() {
           {/* Leaderboard */}
           <section className="bg-white rounded-xl p-4 shadow-md">
             <h2 className="font-bold text-lg mb-4">Leaderboard</h2>
-            <LeaderboardItem avatar="https://photodpshare.com/wp-content/uploads/2025/09/photos-for-whatsapp-profile-pic-photos-for-whatsapp-dp.webp" name="Deepak" score="09–12" />
+            <LeaderboardItem  onClick={()=>navigate("/dashboard")} avatar="https://photodpshare.com/wp-content/uploads/2025/09/photos-for-whatsapp-profile-pic-photos-for-whatsapp-dp.webp" name="Deepak" score="09–12" />
+            {/* <LeaderboardItem  avatar="https://photodpshare.com/wp-content/uploads/2025/09/photos-for-whatsapp-profile-pic-photos-for-whatsapp-dp.webp" name="Deepak" score="09–12" /> */}
             <LeaderboardItem avatar="https://www.jokescoff.com/wp-content/uploads/profile-whatsapp-dp-1-748x421.jpg" name="Asaf" score="18–13" />
             <LeaderboardItem avatar="https://unigreet.com/wp-content/uploads/2020/04/Smiley-816x1024.jpg" name="Ashutosh" score="19–12" />
           </section>
