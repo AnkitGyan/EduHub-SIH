@@ -13,8 +13,8 @@ const questionSchema = new Schema({
       media: { type: String }, 
     }
   ],
-  correctOption: { type: Number }, // index of correct option
-  points: { type: Number, default: 0 }, // e.g., easy-2, medium-5, hard-10
+  correctOption: { type: Number }, 
+  points: { type: Number, default: 0 },
 }, { timestamps: true });
 
 export default mongoose.model("Question", questionSchema);

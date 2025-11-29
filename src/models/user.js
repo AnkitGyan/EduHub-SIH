@@ -6,8 +6,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: String,
   classGrade: { type: Number, required: true, default: 10},
-
-  // performance tracking (optional for now)
   solvedProblems: {
     easy: { type: Number, default: 0 },
     medium: { type: Number, default: 0 },

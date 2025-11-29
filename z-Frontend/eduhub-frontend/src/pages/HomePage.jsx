@@ -1,16 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import HeroCard from "../components/cards/HeroCard";
 import CategoryCard from "../components/cards/CategoryCard";
 import LeaderboardItem from "../components/cards/LeaderboardItem";
 import SuccessStoryItem from "../components/cards/SuccessStoryItem";
-import { RocketIcon, CpuIcon, WrenchIcon, CalculatorIcon, DropletsIcon } from "lucide-react";
+import { RocketIcon, DnaIcon, FlaskConicalIcon, CalculatorIcon, DropletsIcon } from "lucide-react";
 import { Button } from "../components/buttons/button";
 import Footer from "../components/footer/Footer";
+import { Header } from "../components/header/Header";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col items-center">
-      
+    <div className="   bg-gray-50 min-h-screen flex flex-col items-center">
       {/* --- Banner --- */}
       <HeroCard />
 
@@ -38,31 +40,43 @@ export default function HomePage() {
           </section>
 
           {/* Subject Categories */}
-          <section>
-            <h2 className="font-bold text-lg mb-4">Subject Categories</h2>
-            <div className="flex flex-wrap gap-6">
-              <CategoryCard
-                title="Science Wiz"
-                icon={<RocketIcon size={48} className="text-red-500" />}
-                bgColor="bg-white"
-              />
-              <CategoryCard
-                title="Tech Master"
-                icon={<CpuIcon size={48} className="text-blue-500" />}
-                bgColor="bg-yellow-100"
-              />
-              <CategoryCard
-                title="Engineer's Workshop"
-                icon={<WrenchIcon size={48} className="text-orange-500" />}
-                bgColor="bg-white"
-              />
-              <CategoryCard
-                title="Math Magician"
-                icon={<CalculatorIcon size={48} className="text-purple-500" />}
-                bgColor="bg-blue-500"
-              />
-            </div>
-          </section>
+<section>
+  <h2 className="font-bold text-lg mb-4">Subject Categories</h2>
+
+  <div className="flex flex-wrap gap-6">
+    {/* Physics */}
+    <CategoryCard
+      title="Physics Pro"
+      icon={<RocketIcon size={48} className="text-red-500" />}
+      bgColor="bg-white"
+      onClick={() => navigate("/simulate/science")}
+    />
+
+    {/* Biology */}
+    <CategoryCard
+      title="Biology Base"
+      icon={<DnaIcon size={48} className="text-green-600" />}
+      bgColor="bg-yellow-100"
+      onClick={() => navigate("/simulate/biology")}
+    />
+
+    {/* Chemistry */}
+    <CategoryCard
+      title="Chemistry Lab"
+      icon={<FlaskConicalIcon size={48} className="text-green-500" />}
+      bgColor="bg-white"
+      onClick={() => navigate("/simulate/chemistry")}
+    />
+
+    {/* Math */}
+    <CategoryCard
+      title="Math Magician"
+      icon={<CalculatorIcon size={48} className="text-purple-500" />}
+      bgColor="bg-blue-500"
+      onClick={() => navigate("/simulate/maths")}
+    />
+  </div>
+</section>
 
         </div>
 
@@ -72,16 +86,16 @@ export default function HomePage() {
           {/* Leaderboard */}
           <section className="bg-white rounded-xl p-4 shadow-md">
             <h2 className="font-bold text-lg mb-4">Leaderboard</h2>
-            <LeaderboardItem avatar="/images/user1.jpg" name="Top Scoring" score="09–12" />
-            <LeaderboardItem avatar="/images/user2.jpg" name="Soseedling" score="18–13" />
-            <LeaderboardItem avatar="/images/user3.jpg" name="Top Scoring" score="19–12" />
+            <LeaderboardItem avatar="https://photodpshare.com/wp-content/uploads/2025/09/photos-for-whatsapp-profile-pic-photos-for-whatsapp-dp.webp" name="Deepak" score="09–12" />
+            <LeaderboardItem avatar="https://www.jokescoff.com/wp-content/uploads/profile-whatsapp-dp-1-748x421.jpg" name="Asaf" score="18–13" />
+            <LeaderboardItem avatar="https://unigreet.com/wp-content/uploads/2020/04/Smiley-816x1024.jpg" name="Ashutosh" score="19–12" />
           </section>
 
           {/* Success Stories */}
           <section className="bg-white rounded-xl p-4 shadow-md">
             <h2 className="font-bold text-lg mb-4">Success Stories</h2>
-            <SuccessStoryItem avatar="/images/student1.jpg" title="Students Sturentt" subtitle="Students and parents" />
-            <SuccessStoryItem avatar="/images/student2.jpg" title="Eudeng Sunand" subtitle="Students and parents" />
+            <SuccessStoryItem avatar="https://unigreet.com/wp-content/uploads/2020/04/Smiley-816x1024.jpg" title="Students Sturentt" subtitle="Students and parents" />
+            <SuccessStoryItem avatar="https://i.pinimg.com/474x/04/a4/67/04a467a93e726ca41ab54edac198ccdf.jpg" title="Eudeng Sunand" subtitle="Students and parents" />
           </section>
         </div>
       </div>

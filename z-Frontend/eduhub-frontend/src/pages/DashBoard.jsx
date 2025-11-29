@@ -1,163 +1,117 @@
-import React, { useState, useEffect } from "react";
-import { getAuthHeaders } from "../api/auth";
-
-import {
-  Trophy, Star, Calendar, TrendingUp, Award, CheckCircle, BookOpen,
-  Target, Flame, Crown, Home, BarChart3, MessageCircle, Menu, X, Users
-} from "lucide-react";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell
-} from "recharts";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-const API_URL = "http://localhost:5000/api";
+import { Trophy, CheckCircle, Flame, Star, User } from "lucide-react";
 
-const StudentDashboard = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [student, setStudent] = useState(null);
-  const [solvedProblems, setSolvedProblems] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
+export default function Dashboard() {
+  const [user, setUser] = useState({
+    name: "Hero Student",
+    email: "hero@example.com",
+    points: 250,
+    streak: 7,
+    solved: { easy: 5, medium: 3, hard: 1 },
+    badges: [
+      { name: "Starter", reward: "Completed 1 problem" },
+      { name: "Achiever", reward: "Scored 200+ points" }
+    ],
+    classGrade: 10,
+  });
 
-  // Fetch student profile + solved problems
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Fetch student info
-        const userRes = await axios.get(`${API_URL}/users/me`, {
-          headers: getAuthHeaders(),
-        });
-        setStudent(userRes.data);
-
-        // 2. Fetch solved problems
-        const submissionRes = await axios.get(
-          `${API_URL}/submissions/student/${userRes.data._id}`,
-          { headers: getAuthHeaders() }
-        );
-        setSolvedProblems(submissionRes.data);
-
-        // 3. Build category distribution
-        const categoryCount = {};
-        submissionRes.data.forEach((s) => {
-          const cat = s.question.subject;
-          categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-        });
-        setCategoryData(
-          Object.entries(categoryCount).map(([name, value], i) => ({
-            name,
-            value,
-            color: ["#8B5CF6", "#06B6D4", "#10B981", "#F59E0B", "#F43F5E"][i % 5],
-          }))
-        );
+        const res = await axios.get("http://localhost:5000/api/user/dashboard/USER_ID");
+        setUser(res.data);
       } catch (err) {
-        console.error("Error fetching dashboard:", err);
+        console.log("Backend not connected, showing dummy data...");
       }
     };
 
     fetchData();
   }, []);
 
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty) {
-      case "easy":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "hard":
-        return "bg-red-100 text-red-800 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
-
-  if (!student) return <div className="p-10">Loading...</div>;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* 🔹 Navbar */}
-      <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
-        {/* Same navbar as before */}
-      </nav>
+    <div className="p-10">
+      <h1 className="text-4xl font-bold mb-6 flex items-center gap-3">
+        <User className="text-blue-600" size={40} /> Deepak
+      </h1>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Welcome */}
-        <h1 className="text-3xl font-bold mb-2">Welcome back, {student.name}! 👋</h1>
-        <p className="text-gray-600">{student.classGrade} • Keep learning!</p>
-
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-8">
-          <StatCard title="Total Points" value={student.totalPoints} icon={<Star className="w-6 h-6 text-indigo-600" />} color="indigo" />
-          <StatCard title="Problems Solved" value={solvedProblems.length} icon={<CheckCircle className="w-6 h-6 text-green-600" />} color="green" />
-          <StatCard title="Current Streak" value={`${student.streak || 0} days`} icon={<Flame className="w-6 h-6 text-orange-600" />} color="orange" />
-          <StatCard title="Current Level" value={`Level ${student.level || 1}`} icon={<Crown className="w-6 h-6 text-purple-600" />} color="purple" />
+      {/* Top Stats */}
+      <div className="grid md:grid-cols-4 gap-6 mb-10">
+        <div className="bg-white shadow-md rounded-xl p-6">
+          <h3 className="font-semibold text-gray-700 mb-2">Total Points</h3>
+          <p className="text-3xl font-bold flex items-center gap-2 text-yellow-600">
+            <Trophy /> {user.points}
+          </p>
         </div>
 
-        {/* Problems Solved Table */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center">
-            <CheckCircle className="w-6 h-6 text-green-500 mr-2" /> Recently Solved Problems
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="text-left py-3 px-4">Problem</th>
-                  <th className="text-left py-3 px-4">Subject</th>
-                  <th className="text-left py-3 px-4">Difficulty</th>
-                  <th className="text-left py-3 px-4">Points</th>
-                  <th className="text-left py-3 px-4">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {solvedProblems.map((s) => (
-                  <tr key={s._id} className="hover:bg-gray-50">
-                    <td className="py-3 px-4">{s.question.questionText}</td>
-                    <td className="py-3 px-4">{s.question.subject}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-1 rounded text-xs border ${getDifficultyColor(s.question.level)}`}>
-                        {s.question.level}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-indigo-600">+{s.pointsEarned}</td>
-                    <td className="py-3 px-4">{new Date(s.createdAt).toLocaleDateString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="bg-white shadow-md rounded-xl p-6">
+          <h3 className="font-semibold text-gray-700 mb-2">Current Streak</h3>
+          <p className="text-3xl font-bold flex items-center gap-2 text-orange-600">
+            <Flame /> {user.streak} days
+          </p>
         </div>
 
-        {/* Category Pie Chart */}
-        <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center">
-            <Target className="w-6 h-6 text-indigo-500 mr-2" /> Category Distribution
-          </h2>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value">
-                  {categoryData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+        <div className="bg-white shadow-md rounded-xl p-6">
+          <h3 className="font-semibold text-gray-700 mb-2">Problems Solved</h3>
+          <p className="text-3xl font-bold flex items-center gap-2 text-green-600">
+            <CheckCircle /> {user.solved.easy + user.solved.medium + user.solved.hard}
+          </p>
+        </div>
+
+        <div className="bg-white shadow-md rounded-xl p-6">
+          <h3 className="font-semibold text-gray-700 mb-2">Class</h3>
+          <p className="text-3xl font-bold text-purple-600">
+            {user.classGrade}
+          </p>
+        </div>
+      </div>
+
+      {/* Progress Section */}
+      <div className="bg-white rounded-xl p-8 shadow mb-10">
+        <h2 className="font-bold text-2xl mb-6">Subject Progress</h2>
+
+        <div className="space-y-5">
+          {[
+            { subject: "Easy", value: user.solved.easy, color: "bg-green-500" },
+            { subject: "Medium", value: user.solved.medium, color: "bg-yellow-500" },
+            { subject: "Hard", value: user.solved.hard, color: "bg-red-500" },
+          ].map((item) => (
+            <div key={item.subject}>
+              <div className="flex justify-between mb-1">
+                <span className="font-medium">{item.subject}</span>
+                <span className="text-gray-600">{item.value} solved</span>
+              </div>
+
+              <div className="w-full bg-gray-200 h-3 rounded-full">
+                <div
+                  className={`h-3 rounded-full ${item.color}`}
+                  style={{ width: `${item.value * 10}%` }}
+                ></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Badges Section */}
+      <div className="bg-white rounded-xl p-8 shadow">
+        <h2 className="font-bold text-2xl mb-6">Badges Earned</h2>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {user.badges.map((badge, idx) => (
+            <div
+              key={idx}
+              className="p-6 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 shadow flex items-center gap-4"
+            >
+              <Star className="text-yellow-600" size={40} />
+              <div>
+                <h3 className="font-bold text-lg">{badge.name}</h3>
+                <p className="text-gray-600 text-sm">{badge.reward}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
-};
-
-
-const StatCard = ({ title, value, icon, color }) => (
-  <div className={`bg-white rounded-xl shadow-lg p-6 border-l-4 border-${color}-500`}>
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-gray-600 text-sm">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
-      </div>
-      <div className={`bg-${color}-100 p-3 rounded-lg`}>{icon}</div>
-    </div>
-  </div>
-);
-
-export default StudentDashboard;
+}
