@@ -6,6 +6,7 @@ import {
   FaYoutube,
   FaLinkedinIn,
 } from "react-icons/fa";
+import logo from "../../assets/logo.png";
 
 const Footer = () => {
   const footerLinks = {
@@ -34,7 +35,7 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-sky-400 to-green-400 rounded-xl flex items-center justify-center text-xl text-white shadow">
-                <FaGraduationCap />
+                <img src={logo} alt="logo.png" />
               </div>
               <span className="text-xl font-bold text-gray-800">Vidya-Verse</span>
             </div>
